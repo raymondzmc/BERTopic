@@ -338,3 +338,16 @@ def test_variations_apply_the_main_model_when_asked(
 
     # A topic whose documents in a group are all empty has no words to raise, so none may be left lowercase
     assert not variation(topic_model, documents, groups, use_representation_model=True).str.islower().any()
+
+
+def test_soft_labels_rank_single_token_vocabulary_words(documents, document_embeddings, embedding_model):
+    from bertopic.representation import SoftLabels
+
+    representation_model = SoftLabels("sshleifer/tiny-gpt2", nr_samples=8, device="cpu")
+    topic_model = fast_model(embedding_model, representation_model).fit(documents, document_embeddings)
+
+    vocabulary = set(topic_model.vectorizer_model.get_feature_names_out())
+    for topic_id, words in topic_model.get_topics().items():
+        assert len(words) == 10
+        assert all(word in vocabulary for word, _ in words)
+        assert [score for _, score in words] == sorted((score for _, score in words), reverse=True)

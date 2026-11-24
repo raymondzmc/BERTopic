@@ -19,6 +19,13 @@ except Exception:
     msg = "`pip install bertopic` without `--no-deps` \n\n"
     TextGeneration = NotInstalled("TextGeneration", "transformers", custom_msg=msg)
 
+# Soft labels from a causal language model using transformers
+try:
+    from bertopic.representation._softlabels import SoftLabels
+except Exception:
+    msg = "`pip install bertopic` without `--no-deps` \n\n"
+    SoftLabels = NotInstalled("SoftLabels", "transformers", custom_msg=msg)
+
 # Zero-shot classification using transformers
 try:
     from bertopic.representation._zeroshot import ZeroShotClassification
@@ -79,6 +86,7 @@ __all__ = [
     "Ollama",
     "OpenAI",
     "PartOfSpeech",
+    "SoftLabels",
     "TextGeneration",
     "ZeroShotClassification",
 ]

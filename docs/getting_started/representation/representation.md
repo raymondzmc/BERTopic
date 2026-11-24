@@ -134,6 +134,28 @@ topic_model = BERTopic(representation_model=representation_model)
 </div>
 <br>
 
+## **SoftLabels**
+
+c-TF-IDF, and the models that re-rank its candidates, can only use words that occur in a topic's documents. `SoftLabels` instead
+asks a small causal language model to label the theme of each sampled document and reads the next-token distribution at that point,
+without generating any text. Restricted to the vocabulary, that distribution is a soft label: it gives weight to theme words
+such as "hockey" even when the documents only mention teams and players ([Li et al., 2026](https://proceedings.mlr.press/v306/li26a.html)).
+The soft labels of a topic's documents are averaged, and words that are likely for every topic are pushed down.
+
+```python
+from bertopic.representation import SoftLabels
+from bertopic import BERTopic
+
+# Create your representation model
+representation_model = SoftLabels("baidu/ERNIE-4.5-0.3B-PT")
+
+# Use the representation model in BERTopic on top of the default pipeline
+topic_model = BERTopic(representation_model=representation_model)
+```
+
+Each sampled document needs one forward pass, so a model with a few hundred million parameters is enough and a GPU is recommended.
+Only alphabetic vocabulary words that are a single token for the language model are scored.
+
 ## **Zero-Shot Classification**
 
 For some use cases, you might already have a set of candidate labels that you would like to automatically assign to some of the topics.

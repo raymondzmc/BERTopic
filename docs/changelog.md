@@ -76,6 +76,7 @@ Some code will need a small update, which the [migration guide](migration.md) sh
 <h3><b>Representations:</a></b></h3>
 
 * `.get_representation(topic, aspect)` returns a topic's full representation, such as its `Keywords`, an LLM's `Label`, a `StructuredJSON` answer or its `Media`, while `.get_topic` keeps returning words and scores
+* Added `SoftLabels`, a representation model that ranks vocabulary words by the next-token distribution of a small causal language model asked for each document's theme
 * LLM representations share one request loop, so a custom LLM representation only needs to implement `_generate(prompt)`
     * Added `Ollama` as a representation model
     * Pass `json_schema=True`, or a schema of your own, for a structured answer, which is kept as a `StructuredJSON` representation
